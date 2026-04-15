@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZenDash</title>
+    <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
     <h1>ZenDash</h1>
-    <h1 id="clock">00:00:00</h1>
-    <h2 id="greeting"></h2>
-    <input type="text" id = "username" placeholder="Enter Your Name">
-    <span id="displayName"></span>
+    <div id="login-container">
+        <input type="text" id="name-input" placeholder="What is your name?">
+        <button id="login-btn">Enter</button>
+    </div>
+    <div id="dashboard" class="hidden">
+        <h1 id="clock">00:00:00</h1>
+        <h2 id="greeting">
+            <span id="greeting-text">Hello</span>, <span id="user-name"></span>
+        </h2>
+    </div>
 
-    
+
+
+
     <script src="script.js"></script>
 </body>
+
 </html>

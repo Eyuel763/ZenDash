@@ -2,6 +2,8 @@ const storedUsername = localStorage.getItem('username');
 const usernameDisplay = document.getElementById('user-name');
 const loginContainer = document.getElementById('login-container');
 const dashboard = document.getElementById('dashboard');
+let todos = [];
+
 function updateTimeandGreeting() {
     const clock = document.getElementById('clock');
     const greetingLabel = document.getElementById('greeting-text');
@@ -51,3 +53,49 @@ function init() {
 }
 init();
 document.getElementById("login-btn").addEventListener("click", displayUsername);
+
+const todoForm = document.getElementById('todo-form');
+const todoInput = document.getElementById('todo-input');
+const todoList = document.getElementById('todo-list');
+
+function handleTodoSubmit(event) {
+    event.preventDefault(); 
+    const todoText = todoInput.value.trim();
+    if (todoText) {
+        const todo = {
+            id : Date.now(),
+            text : todoText,
+            completed : false
+        };
+        todos.push(todo);
+        renderTodos();
+        todoInput.value = '';
+    }
+}
+
+function renderTodos() {
+    todoList.innerHTML = '';
+
+    todos.forEach((todo) => {
+        const li = document.createElement('li');
+        li.id = todo.id;
+
+        const span = document.createElement('span');
+        span.innerText = todo.text;
+
+        const button = document.createElement('button');
+        button.innerText = 'Delete';
+        button.addEventListener('click', deleteTodo);
+
+        li.appendChild(span);
+        li.appendChild(button);
+        todoList.appendChild(li);
+    })
+}
+
+function deleteTodo(event) {
+    const li = event.target.parentElement;
+    todos = todos.filter((todo) => todo.id !== parseInt(li.id));
+    li.remove();
+}
+todoForm.addEventListener("submit", handleTodoSubmit);

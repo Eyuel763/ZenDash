@@ -48,6 +48,11 @@ function init() {
         loginContainer.classList.add('hidden');
         dashboard.classList.remove('hidden');
     }
+    const savedTodos = localStorage.getItem('todos');
+    if (savedTodos) {
+        todos = JSON.parse(saveTodos); // Convert the JSON string back to an array of todo objects
+        renderTodos();
+    }
     updateTimeandGreeting();
     setInterval(updateTimeandGreeting, 1000);
 }
@@ -59,17 +64,18 @@ const todoInput = document.getElementById('todo-input');
 const todoList = document.getElementById('todo-list');
 
 function handleTodoSubmit(event) {
-    event.preventDefault(); 
+    event.preventDefault(); // Prevent the form from submitting and refreshing the page
     const todoText = todoInput.value.trim();
     if (todoText) {
         const todo = {
             id : Date.now(),
             text : todoText,
             completed : false
-        };
+        }; // Create a new todo object with a unique ID and the entered text
         todos.push(todo);
         renderTodos();
         todoInput.value = '';
+        saveTodos();
     }
 }
 
@@ -87,9 +93,9 @@ function renderTodos() {
         button.innerText = 'Delete';
         button.addEventListener('click', deleteTodo);
 
-        li.appendChild(span);
-        li.appendChild(button);
-        todoList.appendChild(li);
+        li.appendChild(span); // Add the todo text to the list item
+        li.appendChild(button); // Add the delete button to the list item
+        todoList.appendChild(li); // Add the list item to the todo list
     })
 }
 
@@ -97,5 +103,10 @@ function deleteTodo(event) {
     const li = event.target.parentElement;
     todos = todos.filter((todo) => todo.id !== parseInt(li.id));
     li.remove();
+    saveTodos();
+}
+
+function saveTodos() {
+    localStorage.setItem('todos', JSON.stringify(todos)); // Convert the todos array to a JSON string and save it in localStorage
 }
 todoForm.addEventListener("submit", handleTodoSubmit);

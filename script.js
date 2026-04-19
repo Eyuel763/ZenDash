@@ -1,8 +1,30 @@
+const API_KEY = '00affe2cbbee93f1e27234bcc8723167'; // OpenWeatherMap API key
 const storedUsername = localStorage.getItem('username');
 const usernameDisplay = document.getElementById('user-name');
 const loginContainer = document.getElementById('login-container');
 const dashboard = document.getElementById('dashboard');
+
+const todoForm = document.getElementById('todo-form');
+const todoInput = document.getElementById('todo-input');
+const todoList = document.getElementById('todo-list');
 let todos = [];
+
+function init() {
+    const storedUsername = localStorage.getItem('username');
+    const usernameDisplay = document.getElementById('user-name');
+    if (storedUsername) {
+        usernameDisplay.innerText = storedUsername;
+        loginContainer.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+    }
+    const savedTodos = localStorage.getItem('todos');
+    if (savedTodos) {
+        todos = JSON.parse(saveTodos); // Convert the JSON string back to an array of todo objects
+        paintTodos();
+    }
+    updateTimeandGreeting();
+    setInterval(updateTimeandGreeting, 1000);
+}
 
 function updateTimeandGreeting() {
     const clock = document.getElementById('clock');
@@ -26,6 +48,7 @@ function updateTimeandGreeting() {
     greetingLabel.textContent = greetingText;
 
 }
+
 function displayUsername() {
     const username = usernameInput.value.trim();
 
@@ -40,29 +63,6 @@ function displayUsername() {
     }
 }
 
-function init() {
-    const storedUsername = localStorage.getItem('username');
-    const usernameDisplay = document.getElementById('user-name');
-    if (storedUsername) {
-        usernameDisplay.innerText = storedUsername;
-        loginContainer.classList.add('hidden');
-        dashboard.classList.remove('hidden');
-    }
-    const savedTodos = localStorage.getItem('todos');
-    if (savedTodos) {
-        todos = JSON.parse(saveTodos); // Convert the JSON string back to an array of todo objects
-        renderTodos();
-    }
-    updateTimeandGreeting();
-    setInterval(updateTimeandGreeting, 1000);
-}
-init();
-document.getElementById("login-btn").addEventListener("click", displayUsername);
-
-const todoForm = document.getElementById('todo-form');
-const todoInput = document.getElementById('todo-input');
-const todoList = document.getElementById('todo-list');
-
 function handleTodoSubmit(event) {
     event.preventDefault(); // Prevent the form from submitting and refreshing the page
     const todoText = todoInput.value.trim();
@@ -73,13 +73,13 @@ function handleTodoSubmit(event) {
             completed : false
         }; // Create a new todo object with a unique ID and the entered text
         todos.push(todo);
-        renderTodos();
+        paintTodos();
         todoInput.value = '';
         saveTodos();
     }
 }
 
-function renderTodos() {
+function paintTodos() {
     todoList.innerHTML = '';
 
     todos.forEach((todo) => {
@@ -109,4 +109,27 @@ function deleteTodo(event) {
 function saveTodos() {
     localStorage.setItem('todos', JSON.stringify(todos)); // Convert the todos array to a JSON string and save it in localStorage
 }
+
+function onGeoSuccess(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+    // Fetch the weather data from the OpenWeatherMap API
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const temp = document.getElementById('temp');
+            const city = document.getElementById('city');
+            temp.innerText = `${Math.round(data.main.temp)}°C`; // Display the temperature in Celsius, rounded to the nearest whole number
+            city.innerText = data.name;
+        })
+}
+
+function onGeoError() {
+    alert("Can't find you. No weather for you!");
+}
+
+init();
+document.getElementById("login-btn").addEventListener("click", displayUsername);
 todoForm.addEventListener("submit", handleTodoSubmit);
+navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);

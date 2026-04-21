@@ -1,4 +1,4 @@
-const API_KEY = '00affe2cbbee93f1e27234bcc8723167'; // OpenWeatherMap API key
+const API_KEY = config.API_KEY; // OpenWeatherMap API key
 const storedUsername = localStorage.getItem('username');
 const usernameDisplay = document.getElementById('user-name');
 const loginContainer = document.getElementById('login-container');
@@ -19,7 +19,7 @@ function init() {
     }
     const savedTodos = localStorage.getItem('todos');
     if (savedTodos) {
-        todos = JSON.parse(saveTodos); // Convert the JSON string back to an array of todo objects
+        todos = JSON.parse(savedTodos); // Convert the JSON string back to an array of todo objects
         paintTodos();
     }
     updateTimeandGreeting();
@@ -68,9 +68,9 @@ function handleTodoSubmit(event) {
     const todoText = todoInput.value.trim();
     if (todoText) {
         const todo = {
-            id : Date.now(),
-            text : todoText,
-            completed : false
+            id: Date.now(),
+            text: todoText,
+            completed: false
         }; // Create a new todo object with a unique ID and the entered text
         todos.push(todo);
         paintTodos();
@@ -122,6 +122,15 @@ function onGeoSuccess(position) {
             const city = document.getElementById('city');
             temp.innerText = `${Math.round(data.main.temp)}°C`; // Display the temperature in Celsius, rounded to the nearest whole number
             city.innerText = data.name;
+
+            const weatherCondition = data.weather[0].main.toLowerCase();
+            document.body.style.backgroundImage = `url('images/${weatherCondition}.jpg')`;
+
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundPosition = "center";
+            document.body.style.backgroundRepeat = "no-repeat";
+
+            console.log(weatherCondition);
         })
 }
 

@@ -7,12 +7,14 @@
 
 /* Background */
 body {
+    background-color: black;
     height: 100vh;
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    /* background: linear-gradient(135deg, #4facfe, #00f2fe); */
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #333;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 /* Main container */

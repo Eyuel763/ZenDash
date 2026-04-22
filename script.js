@@ -3,6 +3,7 @@ const storedUsername = localStorage.getItem('username');
 const usernameDisplay = document.getElementById('user-name');
 const loginContainer = document.getElementById('login-container');
 const dashboard = document.getElementById('dashboard');
+const usernameInput = document.getElementById('name-input');
 
 const todoForm = document.getElementById('todo-form');
 const todoInput = document.getElementById('todo-input');
@@ -79,15 +80,22 @@ function handleTodoSubmit(event) {
     }
 }
 
-function paintTodos() {
+function paintTodos(filteredTodos = todos) {
     todoList.innerHTML = '';
 
-    todos.forEach((todo) => {
+    filteredTodos.forEach((todo) => {
         const li = document.createElement('li');
         li.id = todo.id;
 
         const span = document.createElement('span');
         span.innerText = todo.text;
+
+        if (todo.completed) {
+            span.style.textDecoration = 'line-through';
+            span.style.opacity = '0.5';
+        }
+
+        span.addEventListener('click', () => toggleTodo(todo.id));
 
         const button = document.createElement('button');
         button.innerText = 'Delete';
@@ -100,10 +108,22 @@ function paintTodos() {
 }
 
 function deleteTodo(event) {
+    event.stopPropagation(); // Prevent the click event from bubbling up to the list item, which would toggle the todo
     const li = event.target.parentElement;
     todos = todos.filter((todo) => todo.id !== parseInt(li.id));
     li.remove();
     saveTodos();
+    paintTodos();
+}
+
+function toggleTodo(id) {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        todo.completed = !todo.completed;
+        saveTodos();
+        paintTodos();
+    }
+
 }
 
 function saveTodos() {
@@ -142,3 +162,18 @@ init();
 document.getElementById("login-btn").addEventListener("click", displayUsername);
 todoForm.addEventListener("submit", handleTodoSubmit);
 navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
+
+// Filter buttons
+document.getElementById('filter-all').addEventListener('click', () => {
+    paintTodos();
+});// Show all todos
+
+document.getElementById('filter-active').addEventListener('click', () => {
+    const activeTodos = todos.filter(todo => !todo.completed);
+    paintTodos(activeTodos);
+});
+
+document.getElementById('filter-completed').addEventListener('click', () => {
+    const completedTodos = todos.filter(t => t.completed);
+    paintTodos(completedTodos);
+})

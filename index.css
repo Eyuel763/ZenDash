@@ -7,20 +7,21 @@
 
 /* Background */
 body {
-    background-color: black;
+    background-color: #f0f2f5; /* Light grey */
     height: 100vh;
     /* background: linear-gradient(135deg, #4facfe, #00f2fe); */
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #333;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* Main container */
 #login-container,
 #dashboard {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(12px);
     padding: 30px;
     border-radius: 20px;
@@ -28,6 +29,44 @@ body {
     text-align: center;
     box-shadow: 0 8px 30px rgba(0,0,0,0.2);
     transition: all 0.4s ease;
+    color: #333;
+}
+
+body.dark-mode {
+    background-color: #1a1a1a; /* Deep Black/Grey */
+    color: white;
+    background-image: none; /* Optional: remove weather image in dark mode */
+}
+
+body.dark-mode #login-container, 
+body.dark-mode #dashboard {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: 1px solid #444;
+}
+
+body.dark-mode h1, body.dark-mode h2 {
+    color: #4facfe; /* Neon blue accent */
+}
+
+#theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: auto; /* Prevent it from being full-width */
+    padding: 10px 20px;
+    z-index: 1000; /* Ensure it stays above other elements */
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #333;
+    text-shadow: none; /* Keeps the button text clean */
+    backdrop-filter: blur(5px);
+}
+
+body.dark-mode #theme-toggle {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+    color: white;
 }
 
 /* Hide class */
@@ -51,6 +90,10 @@ h2 {
     font-size: 2.5rem;
     font-weight: bold;
     letter-spacing: 2px;
+}
+
+h1, h2, #clock {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 /* Inputs */

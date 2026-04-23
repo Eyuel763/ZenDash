@@ -10,7 +10,11 @@ const todoInput = document.getElementById('todo-input');
 const todoList = document.getElementById('todo-list');
 let todos = [];
 
+const themeToggle = document.getElementById('theme-toggle');
+
 function init() {
+    // Run the check when the script starts
+    checkTheme();
     const storedUsername = localStorage.getItem('username');
     const usernameDisplay = document.getElementById('user-name');
     if (storedUsername) {
@@ -157,6 +161,24 @@ function onGeoSuccess(position) {
 function onGeoError() {
     alert("Can't find you. No weather for you!");
 }
+// 1. Check for saved theme on load
+function checkTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+}
+// 2. Toggle and Save
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    
+    // 3. Save the preference
+    if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+    } else {
+        localStorage.setItem('theme', 'light');
+    }
+});
 
 init();
 document.getElementById("login-btn").addEventListener("click", displayUsername);
